@@ -57,10 +57,18 @@ export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows,
 
     const handleDeleteRow = (row: IRow) => {
         setDeletedRows((x) => [...x, row]);
+
+        Object.keys(row).forEach((x) => {
+            removeCellError(row.id, x);
+        });
     };
 
     const handleRestoreRow = (row: IRow) => {
         setDeletedRows((rows) => rows.filter((x) => x.id !== row.id));
+
+        Object.keys(row).forEach((x) => {
+            validateCell(row.id, x, row[x]);
+        });
     };
 
     const handleSubmit = () => {

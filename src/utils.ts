@@ -13,7 +13,11 @@ export function validateDateFormat (value: string) {
 }
 
 export function validatePhoneNumber (value: string) {
-    if (!PHONE_NUMBER_REGEX.test(value)){
+    const fixedPhoneNumber = value.replace(/ /g,'');
+
+    console.log('x', fixedPhoneNumber)
+    
+    if (!PHONE_NUMBER_REGEX.test(fixedPhoneNumber)){
         return 'Invalid phone number'
     }
 }
