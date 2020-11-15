@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import RestoreIcon from '@material-ui/icons/Restore';
 import { cloneDeep, isEqual } from 'lodash';
 import type { IDataGridProps, IRow, IValidationError } from './models';
+import { ValidationErrorDialog } from './ValidationErrorDialog';
 
 export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows, onSubmit }) => {
     const [rows, setRows] = React.useState<IRow[]>(initialRows);
@@ -30,6 +31,7 @@ export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows,
     const [currentPage, setCurrentPage] = React.useState(0);
     const [deletedRows, setDeletedRows] = React.useState([]);
     const [validationErrors, setValidationErrors] = React.useState<IValidationError[]>([]);
+    const [isErrorDialogOpen, setIsErrorDialogOpen] = React.useState<boolean>(false);
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -62,17 +64,21 @@ export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows,
     };
 
     const handleSubmit = () => {
-        const updatedRows = [];
+        if (validationErrors.length) {
+            setIsErrorDialogOpen(true);
+        } else {
+            const updatedRows = [];
 
-        rows.forEach((x, i) => {
-            const isDeleted = deletedRows.find((y) => y.id === x.id);
+            rows.forEach((x, i) => {
+                const isDeleted = deletedRows.find((y) => y.id === x.id);
 
-            if (!isEqual(x, initialRows[i]) && !isDeleted) {
-                updatedRows.push(x);
-            }
-        });
+                if (!isEqual(x, initialRows[i]) && !isDeleted) {
+                    updatedRows.push(x);
+                }
+            });
 
-        onSubmit(updatedRows, deletedRows);
+            onSubmit(updatedRows, deletedRows);
+        }
     };
 
     const handleReset = () => {
@@ -141,6 +147,10 @@ export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows,
 
     return (
         <>
+            <ValidationErrorDialog
+                isOpen={isErrorDialogOpen}
+                onClose={() => setIsErrorDialogOpen(false)}
+            />
             <Box mb="8px">
                 <TextField
                     value={search}
@@ -191,7 +201,11 @@ export const DataGrid: React.FC<IDataGridProps> = ({ columns, rows: initialRows,
                                                 );
 
                                                 return (
-                                                    <TableCell key={cellKey} scope="row">
+                                                    <TableCell
+                                                        style={{ position: 'relative' }}
+                                                        key={cellKey}
+                                                        scope="row"
+                                                    >
                                                         <StyledInput
                                                             mask={column.mask}
                                                             value={cellValue}
