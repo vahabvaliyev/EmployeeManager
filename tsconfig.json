@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "jsx": "react",
+        "module": "esnext",
+        "lib": ["esnext", "dom"],
+        "target": "es5",
+        "noUnusedLocals": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
+    }
+}
