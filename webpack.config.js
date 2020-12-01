@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const SRC_PATH = path.resolve(__dirname, 'src');
@@ -24,6 +25,9 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'public/index.html'),
+        }),
+        new webpack.DefinePlugin({
+            'process.env.INFRA_ENV': JSON.stringify('development')
         })
     ]
 }
