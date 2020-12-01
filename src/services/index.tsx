@@ -1,6 +1,6 @@
 import React from 'react';
 import { IEmployeeService } from './EmployeeService';
-import { MockEmployeeSerice } from './mocks/mockEmployeeService';
+import { MockEmployeeSerice } from './mocks/MockEmployeeService';
 
 interface IServices {
     employeeService: IEmployeeService;
